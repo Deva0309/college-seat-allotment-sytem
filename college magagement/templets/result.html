@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Allotment Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="container nav">
+
+        <h1>SeatAllot</h1>
+
+        <a href="{{ url_for('index') }}"
+           class="admin-link">
+            Home
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container result-container">
+
+    {% if not_allotted %}
+
+        <div class="result-card failed">
+
+            <div class="result-icon">
+                !
+            </div>
+
+            <h2>No Seat Allotted</h2>
+
+            <p>
+                Sorry {{ result.name }}, no seat was available
+                for your rank, category and selected preferences.
+            </p>
+
+            <div class="student-info">
+
+                <p>
+                    <strong>Rank:</strong>
+                    {{ result.rank }}
+                </p>
+
+                <p>
+                    <strong>Category:</strong>
+                    {{ result.category }}
+                </p>
+
+            </div>
+
+            <a href="{{ url_for('index') }}"
+               class="btn">
+                Try Again
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <div class="result-card success">
+
+            <div class="result-icon">
+                ✓
+            </div>
+
+            <h2>Congratulations!</h2>
+
+            <p>
+                Your college seat has been successfully allotted.
+            </p>
+
+
+            <div class="allotment-box">
+
+                <div>
+                    <span>Student Name</span>
+                    <strong>{{ result.name }}</strong>
+                </div>
+
+                <div>
+                    <span>Rank</span>
+                    <strong>{{ result.rank }}</strong>
+                </div>
+
+                <div>
+                    <span>Category</span>
+                    <strong>{{ result.category }}</strong>
+                </div>
+
+                <div>
+                    <span>College</span>
+                    <strong>{{ result.college }}</strong>
+                </div>
+
+                <div>
+                    <span>Course</span>
+                    <strong>{{ result.course }}</strong>
+                </div>
+
+                <div>
+                    <span>Annual Fee</span>
+                    <strong>
+                        ₹{{ "{:,}".format(result.fee) }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <a href="{{ url_for('index') }}"
+               class="btn">
+                Back to Home
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+
+<footer>
+
+    <p>
+        College Seat Allotment System |
+        FSD Project
+    </p>
+
+</footer>
+
+</body>
+</html>

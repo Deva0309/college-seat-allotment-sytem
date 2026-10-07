@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="container nav">
+
+        <h1>SeatAllot Admin</h1>
+
+        <a href="{{ url_for('index') }}"
+           class="admin-link">
+            Student Portal
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="container admin-container">
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alert">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h2>Admin Dashboard</h2>
+
+            <p>
+                Monitor seats and student allotments.
+            </p>
+
+        </div>
+
+
+        <form action="{{ url_for('reset_seats') }}"
+              method="POST">
+
+            <button
+                type="submit"
+                class="btn danger"
+                onclick="return confirm('Reset all seat counts?')">
+
+                Reset Seats
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Seat Availability</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>College</th>
+                        <th>Course</th>
+                        <th>Category</th>
+                        <th>Seats</th>
+                        <th>Fee</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for college in colleges %}
+
+                    <tr>
+
+                        <td>
+                            {{ college["college_name"] }}
+                        </td>
+
+                        <td>
+                            {{ college["course"] }}
+                        </td>
+
+                        <td>
+                            {{ college["category"] }}
+                        </td>
+
+                        <td>
+
+                            {% if college["seats"] > 0 %}
+
+                                <span class="available">
+                                    {{ college["seats"] }} Available
+                                </span>
+
+                            {% else %}
+
+                                <span class="full">
+                                    Full
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            ₹{{ "{:,}".format(college["fee"]) }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Student Allotments</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Name</th>
+                        <th>Rank</th>
+                        <th>Category</th>
+                        <th>College</th>
+                        <th>Course</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>
+                            {{ student["name"] }}
+                        </td>
+
+                        <td>
+                            {{ student["rank"] }}
+                        </td>
+
+                        <td>
+                            {{ student["category"] }}
+                        </td>
+
+                        <td>
+                            {{ student["allotted_college"] or "-" }}
+                        </td>
+
+                        <td>
+                            {{ student["allotted_course"] or "-" }}
+                        </td>
+
+                        <td>
+
+                            {% if student["status"] == "ALLOTTED" %}
+
+                                <span class="available">
+                                    ALLOTTED
+                                </span>
+
+                            {% else %}
+
+                                <span class="full">
+                                    NOT ALLOTTED
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="6"
+                            class="empty">
+
+                            No students registered yet.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        College Seat Allotment System |
+        Admin Dashboard
+    </p>
+
+</footer>
+
+</body>
+</html>

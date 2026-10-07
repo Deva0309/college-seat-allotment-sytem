@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>College Seat Allotment System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header>
+    <div class="container nav">
+        <h1>SeatAllot</h1>
+
+        <a href="{{ url_for('admin') }}" class="admin-link">
+            Admin
+        </a>
+    </div>
+</header>
+
+
+<section class="hero">
+
+    <div class="container">
+
+        <h2>College Seat Allotment System</h2>
+
+        <p>
+            Get your college seat based on rank, category,
+            course preference and seat availability.
+        </p>
+
+    </div>
+
+</section>
+
+
+<main class="container">
+
+    {% with messages = get_flashed_messages() %}
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="alert">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <div class="card">
+
+        <h2>Student Registration</h2>
+
+        <form action="{{ url_for('allot') }}"
+              method="POST">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="name">
+                        Student Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="student@example.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="rank">
+                        Entrance Rank
+                    </label>
+
+                    <input
+                        type="number"
+                        id="rank"
+                        name="rank"
+                        min="1"
+                        placeholder="Example: 5000"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Category
+                    </label>
+
+                    <select
+                        id="category"
+                        name="category"
+                        required
+                    >
+
+                        <option value="">
+                            Select Category
+                        </option>
+
+                        <option value="General">
+                            General
+                        </option>
+
+                        <option value="OBC">
+                            OBC
+                        </option>
+
+                        <option value="SC">
+                            SC
+                        </option>
+
+                        <option value="ST">
+                            ST
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <h3>Course Preferences</h3>
+
+            <p class="help">
+                Select courses in your preferred order.
+            </p>
+
+
+            <div class="preference-grid">
+
+                <div class="form-group">
+
+                    <label for="preference1">
+                        Preference 1
+                    </label>
+
+                    <select
+                        name="preference1"
+                        id="preference1"
+                        required
+                    >
+
+                        <option value="">
+                            Select Course
+                        </option>
+
+                        <option value="Computer Science">
+                            Computer Science
+                        </option>
+
+                        <option value="Information Technology">
+                            Information Technology
+                        </option>
+
+                        <option value="Electronics">
+                            Electronics
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="preference2">
+                        Preference 2
+                    </label>
+
+                    <select
+                        name="preference2"
+                        id="preference2"
+                    >
+
+                        <option value="">
+                            Select Course
+                        </option>
+
+                        <option value="Computer Science">
+                            Computer Science
+                        </option>
+
+                        <option value="Information Technology">
+                            Information Technology
+                        </option>
+
+                        <option value="Electronics">
+                            Electronics
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="preference3">
+                        Preference 3
+                    </label>
+
+                    <select
+                        name="preference3"
+                        id="preference3"
+                    >
+
+                        <option value="">
+                            Select Course
+                        </option>
+
+                        <option value="Computer Science">
+                            Computer Science
+                        </option>
+
+                        <option value="Information Technology">
+                            Information Technology
+                        </option>
+
+                        <option value="Electronics">
+                            Electronics
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button type="submit" class="btn">
+                Check Seat Allotment
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Available Colleges & Seats</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>College</th>
+                        <th>Course</th>
+                        <th>Category</th>
+                        <th>Rank Range</th>
+                        <th>Seats</th>
+                        <th>Fee</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for college in colleges %}
+
+                    <tr>
+
+                        <td>
+                            {{ college["college_name"] }}
+                        </td>
+
+                        <td>
+                            {{ college["course"] }}
+                        </td>
+
+                        <td>
+                            {{ college["category"] }}
+                        </td>
+
+                        <td>
+                            {{ college["min_rank"] }}
+                            -
+                            {{ college["max_rank"] }}
+                        </td>
+
+                        <td>
+                            <span class="seat">
+                                {{ college["seats"] }}
+                            </span>
+                        </td>
+
+                        <td>
+                            ₹{{ "{:,}".format(college["fee"]) }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    <p>
+        College Seat Allotment System |
+        FSD Project
+    </p>
+
+</footer>
+
+</body>
+</html>
